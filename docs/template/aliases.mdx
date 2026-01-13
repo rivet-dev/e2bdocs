@@ -1,0 +1,177 @@
+---
+title: "Template Aliases"
+sidebarTitle: "Aliases"
+description: "Understanding and managing template aliases"
+---
+
+Template aliases are unique identifiers used to reference and create sandboxes from your templates. They serve as human-readable names that make it easy to identify and use your templates across your applications.
+
+## What is a Template Alias?
+
+An alias is a string identifier that you assign to a template when building it. Once a template is built with an alias, you can use that alias to create sandboxes from the template.
+
+<CodeGroup>
+
+```typescript JavaScript & TypeScript
+// Build a template with an alias
+await Template.build(template, {
+  alias: 'my-python-env',
+  cpuCount: 2,
+  memoryMB: 2048,
+})
+
+// Create a sandbox using the alias
+const sandbox = await Sandbox.create('my-python-env')
+```
+
+```python Python
+# Build a template with an alias
+Template.build(
+    template,
+    alias='my-python-env',
+    cpu_count=2,
+    memory_mb=2048,
+)
+
+# Create a sandbox using the alias
+sandbox = Sandbox(template='my-python-env')
+```
+
+</CodeGroup>
+
+## Uniqueness Requirement
+
+<Warning>
+Template aliases must be **globally unique across the entire E2B platform**, not just within your team or account. This means if another user has already claimed an alias, you cannot use it for your template.
+</Warning>
+
+When choosing an alias, consider using:
+- Your company or project name as a prefix (e.g., `acme-api-server`)
+- Version numbers or environment indicators (e.g., `myapp-v2`, `myapp-staging`)
+- Descriptive names that indicate the template's purpose (e.g., `data-analysis-python`)
+
+## Common Use Cases
+
+### Development and Production Environments
+
+Use different aliases for different environments:
+
+<CodeGroup>
+
+```typescript JavaScript & TypeScript
+// Development template
+await Template.build(template, {
+  alias: 'myapp-dev',
+  cpuCount: 1,
+  memoryMB: 1024,
+})
+
+// Production template
+await Template.build(template, {
+  alias: 'myapp-prod',
+  cpuCount: 4,
+  memoryMB: 4096,
+})
+```
+
+```python Python
+# Development template
+Template.build(
+    template,
+    alias='myapp-dev',
+    cpu_count=1,
+    memory_mb=1024,
+)
+
+# Production template
+Template.build(
+    template,
+    alias='myapp-prod',
+    cpu_count=4,
+    memory_mb=4096,
+)
+```
+
+</CodeGroup>
+
+### Multiple Template Variants
+
+Create different variants of the same template with different configurations:
+
+<CodeGroup>
+
+```typescript JavaScript & TypeScript
+// Small instance
+await Template.build(template, {
+  alias: 'myapp-small',
+  cpuCount: 1,
+  memoryMB: 512,
+})
+
+// Large instance
+await Template.build(template, {
+  alias: 'myapp-large',
+  cpuCount: 8,
+  memoryMB: 16384,
+})
+```
+
+```python Python
+# Small instance
+Template.build(
+    template,
+    alias='myapp-small',
+    cpu_count=1,
+    memory_mb=512,
+)
+
+# Large instance
+Template.build(
+    template,
+    alias='myapp-large',
+    cpu_count=8,
+    memory_mb=16384,
+)
+```
+
+</CodeGroup>
+
+<Tip>
+When building variants with the same template definition but different CPU/RAM configurations, E2B's caching system will reuse common layers, making subsequent builds much faster.
+</Tip>
+
+## Checking Alias Availability
+
+You can check if an alias is already in use with the `aliasExists` method.
+
+<CodeGroup>
+
+```typescript JavaScript & TypeScript
+import { Template } from 'e2b'
+
+const exists = await Template.aliasExists('my-template')
+console.log(`Alias ${exists ? 'is taken' : 'is available'}`)
+```
+
+```python Python
+from e2b import Template
+
+exists = Template.alias_exists('my-template')
+print(f"Alias {'is taken' if exists else 'is available'}")
+```
+
+```python Python (Async)
+from e2b import AsyncTemplate
+
+exists = await AsyncTemplate.alias_exists('my-template')
+print(f"Alias {'is taken' if exists else 'is available'}")
+```
+
+</CodeGroup>
+
+## Best Practices
+
+1. **Use descriptive names**: Choose aliases that clearly indicate the template's purpose or configuration
+2. **Include versioning**: Consider adding version numbers to your aliases for better version management (e.g., `myapp-v1`, `myapp-v2`)
+3. **Use consistent naming**: Establish a naming convention for your team and stick to it
+4. **Document your aliases**: Keep a record of which aliases are used for which purposes in your team

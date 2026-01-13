@@ -104,6 +104,7 @@
               "docs/template/defining-template",
               "docs/template/start-ready-command",
               "docs/template/build",
+              "docs/template/aliases",
               "docs/template/logging",
               "docs/template/error-handling",
               {
