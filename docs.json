@@ -166,23 +166,32 @@
               "docs/cli",
               "docs/cli/auth",
               "docs/cli/list-sandboxes",
+              "docs/cli/create-sandbox",
+              "docs/cli/connect-to-sandbox",
+              "docs/cli/exec-command",
               "docs/cli/shutdown-sandboxes"
             ]
           },
           {
             "group": "Deployment",
-            "pages": ["docs/byoc"]
+            "pages": [
+              "docs/byoc"
+            ]
           },
           {
             "group": "Migration",
-            "pages": ["docs/migration/v2"]
+            "pages": [
+              "docs/migration/v2"
+            ]
           },
           {
             "group": "Troubleshooting",
             "pages": [
               {
                 "group": "SDKs",
-                "pages": ["docs/troubleshooting/sdks/workers-edge-runtime"]
+                "pages": [
+                  "docs/troubleshooting/sdks/workers-edge-runtime"
+                ]
               },
               {
                 "group": "Templates",
