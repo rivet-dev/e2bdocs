@@ -90,7 +90,8 @@
               "docs/sandbox/internet-access",
               "docs/sandbox/connect-bucket",
               "docs/sandbox/rate-limits",
-              "docs/sandbox/secured-access"
+              "docs/sandbox/secured-access",
+              "docs/sandbox/ip-tunneling"
             ]
           },
           {
