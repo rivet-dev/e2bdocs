@@ -91,7 +91,8 @@
               "docs/sandbox/connect-bucket",
               "docs/sandbox/rate-limits",
               "docs/sandbox/secured-access",
-              "docs/sandbox/ip-tunneling"
+              "docs/sandbox/ip-tunneling",
+              "docs/sandbox/custom-domain"
             ]
           },
           {
