@@ -277,7 +277,7 @@ This confirms that the request originated from E2B and has not been tampered wit
 ```js JavaScript & TypeScript
 function verifyWebhookSignature(secret : string, payload : string, payloadSignature : string) {
     const expectedSignatureRaw = crypto.createHash('sha256').update(secret + payload).digest('base64');
-    const expectedSignature = expectedSignatureRaw.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    const expectedSignature = expectedSignatureRaw.replace(/=+$/, '');
     return  expectedSignature == payloadSignature
 }
 
@@ -295,7 +295,7 @@ import base64
 def verify_webhook_signature(secret: str, payload: str, payload_signature: str) -> bool:
     hash_bytes = hashlib.sha256((secret + payload).encode('utf-8')).digest()
     expected_signature = base64.b64encode(hash_bytes).decode('utf-8')
-    expected_signature = expected_signature.replace('+', '-').replace('/', '_').rstrip('=')
+    expected_signature = expected_signature.rstrip('=')
 
     return expected_signature == payload_signature
 
@@ -316,8 +316,6 @@ func verifyWebhookSignature(secret, payload, payloadSignature string) bool {
     hash := sha256.Sum256([]byte(secret + payload))
     expectedSignature := base64.StdEncoding.EncodeToString(hash[:])
 
-    expectedSignature = strings.ReplaceAll(expectedSignature, "+", "-")
-    expectedSignature = strings.ReplaceAll(expectedSignature, "/", "_")
     expectedSignature = strings.TrimRight(expectedSignature, "=")
 
     return expectedSignature == payloadSignature
