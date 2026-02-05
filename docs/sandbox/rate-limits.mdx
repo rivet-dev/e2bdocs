@@ -11,6 +11,7 @@ This page describes API and sandbox rate limits of the E2B platform.
 - [Sandbox operations & requests to sandboxes](#sandbox-operations-%26-requests-to-sandboxes)
 - [Concurrent Sandboxes](#concurrent-sandboxes)
 - [Sandbox creation rate](#sandbox-creation-rate)
+- [Egress connections](#egress-connections)
 - [Reaching limits](#reaching-limits)
 - [Increasing and avoiding rate limits](#increasing-and-avoiding-rate-limits)
 
@@ -48,6 +49,12 @@ Here's a limits breakdown table based on the plan:
       <td style={{ fontWeight: 'bold', padding: '8px' }}>Sandbox creation rate</td>
       <td style={{ textAlign: 'center', padding: '8px' }}>1 / sec</td>
       <td style={{ textAlign: 'center', padding: '8px' }}>5 / sec</td>
+      <td style={{ textAlign: 'center', padding: '8px' }}>Custom</td>
+    </tr>
+    <tr>
+      <td style={{ fontWeight: 'bold', padding: '8px' }}>Egress connections per sandbox</td>
+      <td style={{ textAlign: 'center', padding: '8px' }}>2,500</td>
+      <td style={{ textAlign: 'center', padding: '8px' }}>2,500</td>
       <td style={{ textAlign: 'center', padding: '8px' }}>Custom</td>
     </tr>
   </tbody>
@@ -111,6 +118,14 @@ This limit controls how quickly you can create new sandboxes.
 
 ### Enterprise tier
 **Custom limit - 5+ sandboxes per second**
+
+---
+
+## Egress connections
+
+**2,500 connections per sandbox**
+
+This limit controls the maximum number of outbound (egress) network connections that can be established from a single sandbox.
 
 ## Reaching limits
 
