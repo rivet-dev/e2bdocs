@@ -3,6 +3,17 @@ title: "Desktop"
 description: "Sandbox with Ubuntu Desktop and VNC access"
 ---
 
+This template creates a sandbox with a full Ubuntu 22.04 desktop environment, including the XFCE desktop, common applications, and VNC streaming for remote access. It's ideal for building AI agents that need to interact with graphical user interfaces.
+
+The template includes:
+- **Ubuntu 22.04** with XFCE desktop environment
+- **VNC streaming** via [noVNC](https://novnc.com/) for browser-based access
+- **Pre-installed applications**: LibreOffice, text editors, file manager, and common utilities
+- **Automation tools**: [xdotool](https://github.com/jordansissel/xdotool) and [scrot](https://github.com/resurrecting-open-source-projects/scrot) for programmatic desktop control
+
+## Template Definition
+
+The template installs the desktop environment, sets up VNC streaming via [x11vnc](https://github.com/LibVNC/x11vnc) and noVNC, and configures a startup script.
 
 <CodeGroup>
 
@@ -79,6 +90,7 @@ template = (
             "apt-get update",
             "apt-get install -y \
                 xserver-xorg \
+                xorg \
                 x11-xserver-utils \
                 xvfb \
                 x11-utils \
@@ -131,6 +143,9 @@ template = (
 
 </CodeGroup>
 
+## Startup Script
+
+The startup script initializes the virtual display using [Xvfb](https://www.x.org/releases/X11R7.6/doc/man/man1/Xvfb.1.xhtml) (X Virtual Framebuffer), launches the XFCE desktop session, starts the VNC server, and exposes the desktop via noVNC on port 6080. This script runs automatically when the sandbox starts.
 
 ```bash start_command.sh
 #!/bin/bash
@@ -156,6 +171,9 @@ cd /opt/noVNC/utils && ./novnc_proxy --vnc localhost:5900 --listen 6080 --web /o
 sleep 2
 ```
 
+## Building the Template
+
+Build the template with increased CPU and memory allocation to handle the desktop environment installation. The build process may take several minutes due to the size of the packages being installed.
 
 <CodeGroup>
 

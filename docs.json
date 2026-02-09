@@ -43,6 +43,12 @@
             ]
           },
           {
+            "group": "Use cases",
+            "pages": [
+              "docs/use-cases/computer-use"
+            ]
+          },
+          {
             "group": "Code Interpreting",
             "pages": [
               {
