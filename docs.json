@@ -201,13 +201,7 @@
           {
             "group": "Troubleshooting",
             "pages": [
-              {
-                "group": "SDKs",
-                "pages": [
-                  "docs/troubleshooting/sdks/workers-edge-runtime"
-                ]
-              },
-              {
+{
                 "group": "Templates",
                 "pages": [
                   "docs/troubleshooting/templates/build-authentication-error",
