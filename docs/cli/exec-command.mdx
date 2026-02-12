@@ -10,6 +10,14 @@ e2b sandbox exec <sandbox-id> <command>
 ```
 </CodeGroup>
 
+### Pipe command from stdin
+
+You can pipe directly into the sandbox as well:
+
+```bash
+echo "foo" | e2b sandbox exec <sandbox-id>
+```
+
 ### Run in background
 
 Use the `--background` flag to run a command in the background and return immediately. The command will print the process ID (PID) to stderr:
