@@ -201,13 +201,9 @@
           {
             "group": "Troubleshooting",
             "pages": [
-{
-                "group": "Templates",
-                "pages": [
-                  "docs/troubleshooting/templates/build-authentication-error",
-                  "docs/troubleshooting/templates/49999-port-not-open"
-                ]
-              }
+              "docs/troubleshooting/templates/build-authentication-error",
+              "docs/troubleshooting/templates/49999-port-not-open",
+              "docs/troubleshooting/pip-install-error"
             ]
           }
         ]
