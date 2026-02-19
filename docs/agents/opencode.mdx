@@ -20,7 +20,7 @@ Once inside the sandbox, start OpenCode.
 opencode
 ```
 
-## Run Headless
+## Run headless
 
 Use `opencode run` for non-interactive mode. Pass your LLM provider's API key as an environment variable — OpenCode supports `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `GEMINI_API_KEY`, and [others](https://opencode.ai/docs/config/).
 
@@ -111,7 +111,7 @@ sandbox.kill()
 ```
 </CodeGroup>
 
-## Launch the Web UI
+## Launch the web UI
 
 OpenCode has a [built-in web interface](https://opencode.ai/docs/web/). Start it inside a sandbox and connect from your browser.
 
@@ -163,7 +163,7 @@ print(f"Sandbox ID: {sandbox.sandbox_id}")
 ```
 </CodeGroup>
 
-## Build a Custom Template
+## Build a custom template
 
 If you need to customize the environment (e.g. pre-install dependencies, add config files), build your own template on top of the pre-built `opencode` template.
 
@@ -238,16 +238,16 @@ python build.py
 ```
 </CodeGroup>
 
-## Related Guides
+## Related guides
 
 <CardGroup cols={3}>
-  <Card title="Sandbox Persistence" icon="clock" href="/docs/sandbox/persistence">
+  <Card title="Sandbox persistence" icon="clock" href="/docs/sandbox/persistence">
     Auto-pause, resume, and manage sandbox lifecycle
   </Card>
-  <Card title="Git Integration" icon="code-branch" href="/docs/sandbox/git-integration">
+  <Card title="Git integration" icon="code-branch" href="/docs/sandbox/git-integration">
     Clone repos, manage branches, and push changes
   </Card>
-  <Card title="SSH Access" icon="terminal" href="/docs/sandbox/ssh-access">
+  <Card title="SSH access" icon="terminal" href="/docs/sandbox/ssh-access">
     Connect to the sandbox via SSH for interactive sessions
   </Card>
 </CardGroup>

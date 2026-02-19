@@ -23,7 +23,7 @@
         "icon": "book-open-cover",
         "groups": [
           {
-            "group": "Getting Started",
+            "group": "Getting started",
             "pages": [
               "docs",
               {
@@ -50,7 +50,7 @@
             ]
           },
           {
-            "group": "Agents in Sandbox",
+            "group": "Agents in sandbox",
             "pages": [
               "docs/agents/amp",
               "docs/agents/claude-code",
@@ -59,7 +59,7 @@
             ]
           },
           {
-            "group": "Code Interpreting",
+            "group": "Code interpreting",
             "pages": [
               {
                 "group": "Analyze data with AI",
@@ -173,7 +173,7 @@
             ]
           },
           {
-            "group": "MCP Gateway",
+            "group": "MCP gateway",
             "pages": [
               "docs/mcp",
               "docs/mcp/quickstart",
@@ -218,7 +218,7 @@
         ]
       },
       {
-        "anchor": "SDK Reference",
+        "anchor": "SDK reference",
         "icon": "brackets-curly",
         "href": "https://e2b.dev/docs/sdk-reference"
       }

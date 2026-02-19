@@ -20,7 +20,7 @@ Once inside the sandbox, start AMP.
 amp
 ```
 
-## Run Headless
+## Run headless
 
 Use `-x` for non-interactive mode and `--dangerously-allow-all` to auto-approve all tool calls (safe inside E2B sandboxes). AMP uses its own API key from [ampcode.com/settings](https://ampcode.com/settings).
 
@@ -170,7 +170,7 @@ sandbox.kill()
 ```
 </CodeGroup>
 
-## Thread Management
+## Thread management
 
 AMP persists conversations as threads that can be resumed or continued with follow-up tasks.
 
@@ -236,7 +236,7 @@ sandbox.kill()
 ```
 </CodeGroup>
 
-## Build a Custom Template
+## Build a custom template
 
 If you need to customize the environment (e.g. pre-install dependencies, add config files), build your own template on top of the pre-built `amp` template.
 
@@ -295,16 +295,16 @@ python build.py
 ```
 </CodeGroup>
 
-## Related Guides
+## Related guides
 
 <CardGroup cols={3}>
-  <Card title="Sandbox Persistence" icon="clock" href="/docs/sandbox/persistence">
+  <Card title="Sandbox persistence" icon="clock" href="/docs/sandbox/persistence">
     Auto-pause, resume, and manage sandbox lifecycle
   </Card>
-  <Card title="Git Integration" icon="code-branch" href="/docs/sandbox/git-integration">
+  <Card title="Git integration" icon="code-branch" href="/docs/sandbox/git-integration">
     Clone repos, manage branches, and push changes
   </Card>
-  <Card title="SSH Access" icon="terminal" href="/docs/sandbox/ssh-access">
+  <Card title="SSH access" icon="terminal" href="/docs/sandbox/ssh-access">
     Connect to the sandbox via SSH for interactive sessions
   </Card>
 </CardGroup>
