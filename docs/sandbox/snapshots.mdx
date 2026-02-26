@@ -165,3 +165,24 @@ from e2b import Sandbox
 Sandbox.delete_snapshot(snapshot.snapshot_id)
 ```
 </CodeGroup>
+
+## Snapshots vs. Templates
+
+Both snapshots and [templates](/docs/template/quickstart) create reusable starting points for sandboxes, but they solve different problems.
+
+| | Templates | Snapshots |
+|---|---|---|
+| Defined by | Declarative code (Template builder) | Capturing a running sandbox |
+| Reproducibility | Same definition produces the same sandbox every time | Captures whatever state exists at that moment |
+| Best for | Repeatable base environments | Checkpointing, rollback, forking runtime state |
+
+Use templates when every sandbox should start from an identical, known state — pre-installed tools, fixed configurations, consistent environments.
+Use snapshots when you need to capture or fork live runtime state that depends on what happened during execution.
+
+## Use cases
+
+- **Checkpointing agent work** — an AI agent has loaded data and produced partial results in memory. Snapshot it so you can resume or fork from that point later.
+- **Rollback points** — snapshot before a risky or expensive operation (running untrusted code, applying a migration, refactoring a web app). If it fails, rollback - spawn a fresh sandbox from the snapshot before the operation happened.
+- **Forking workflows** — spawn multiple sandboxes from the same snapshot to explore different approaches in parallel.
+- **Cached sandboxes** — avoid repeating expensive setup by snapshotting a sandbox that has already loaded a large dataset or started a long-running process.
+- **Sharing state** — one user or agent configures an environment interactively, snapshots it, and others start from that exact state.
