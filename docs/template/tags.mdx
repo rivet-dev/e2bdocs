@@ -144,6 +144,31 @@ Template.remove_tags('my-template', 'staging')
 Removing a tag does not delete the build artifact. Other tags pointing to the same build will continue to work.
 </Warning>
 
+### List tags
+
+Retrieve all tags for a template. Each tag includes the tag name, the associated build ID, and when the tag was assigned.
+
+<CodeGroup>
+
+```typescript JavaScript & TypeScript
+import { Template } from 'e2b'
+
+const tags = await Template.getTags('my-template')
+for (const tag of tags) {
+  console.log(`Tag: ${tag.tag}, Build: ${tag.buildId}, Created: ${tag.createdAt}`)
+}
+```
+
+```python Python
+from e2b import Template
+
+tags = Template.get_tags('my-template')
+for tag in tags:
+    print(f"Tag: {tag.tag}, Build: {tag.build_id}, Created: {tag.created_at}")
+```
+
+</CodeGroup>
+
 ## Use cases
 
 ### Semantic versioning
