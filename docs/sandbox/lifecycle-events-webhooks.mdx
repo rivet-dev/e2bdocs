@@ -251,12 +251,18 @@ The payload structure matches the event format from the API:
 
 ```json
 {
-  "version": "v1",
+  "version": "v2",
   "id": "<event-id>",
   "type": "<sandbox-event-type>",
   "eventData": {
     "sandbox_metadata": {
       "<custom-key>": "<custom-value>"
+    },
+    "execution": {
+      "started_at": "2025-08-06T20:58:24Z",
+      "vcpu_count": 2,
+      "memory_mb": 512,
+      "execution_time": 1000,
     }
   },
   "sandboxBuildId": "<template-build-id>",
@@ -267,6 +273,13 @@ The payload structure matches the event format from the API:
   "timestamp": "2025-08-06T20:59:24Z"
 }
 ```
+
+`eventData.execution` contains sandbox execution details and is included on `sandbox.lifecycle.killed` and `sandbox.lifecycle.paused` events:
+
+- `started_at` - UTC RFC3339 timestamp when the current sandbox execution started
+- `vcpu_count` - Number of vCPUs assigned to the sandbox
+- `memory_mb` - Memory assigned to the sandbox in MB
+- `execution_time` - Sandbox runtime in milliseconds
 
 # Webhook verification
 To ensure the authenticity of webhook requests, each request includes a signature in the `e2b-signature` header.
