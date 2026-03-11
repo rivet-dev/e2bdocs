@@ -81,17 +81,40 @@ const sandbox = await Sandbox.create({
   },
 })
 
-// Example: app source already exists in /home/user/app.
-// Replace this command with your API server, Next.js, Vite, etc.
 await sandbox.commands.run(
-  'cd /home/user/app && npm install && npm run dev -- --host 0.0.0.0 --port 3000',
+  `python3 -m pip -q install 'flask>=2.2'`
+)
+
+await sandbox.files.write(
+  '/home/user/app.py',
+  [
+    'from flask import Flask',
+    'app = Flask(__name__)',
+    '@app.route("/")',
+    'def hello():',
+    '    return "Hello, World!"',
+    'app.run(host="0.0.0.0", port=3000)',
+    '',
+  ].join('\n')
+)
+
+await sandbox.commands.run(
+  'python3 -u /home/user/app.py > /home/user/flask.log 2>&1',
   { background: true }
 )
 
+await new Promise((resolve) => setTimeout(resolve, 1000))
+
 const previewHost = sandbox.getHost(3000)
 console.log(`Preview URL: https://${previewHost}`)
+
+console.log(`Status before pause: ${(await sandbox.getInfo()).state}`)
+await sandbox.pause()
+console.log(`Status after pause: ${(await sandbox.getInfo()).state}`)
 ```
 ```python Python
+import time
+
 from e2b import Sandbox
 
 sandbox = Sandbox.create(
@@ -102,15 +125,31 @@ sandbox = Sandbox.create(
     },
 )
 
-# Example: app source already exists in /home/user/app.
-# Replace this command with your API server, Next.js, Vite, etc.
+sandbox.commands.run("python3 -m pip -q install 'flask>=2.2'")
+
+sandbox.files.write(
+    "/home/user/app.py",
+    'from flask import Flask\n'
+    'app = Flask(__name__)\n'
+    '@app.route("/")\n'
+    'def hello():\n'
+    '    return "Hello, World!"\n'
+    'app.run(host="0.0.0.0", port=3000)\n'
+)
+
 sandbox.commands.run(
-    "cd /home/user/app && npm install && npm run dev -- --host 0.0.0.0 --port 3000",
+    "python3 -u /home/user/app.py > /home/user/flask.log 2>&1",
     background=True,
 )
 
+time.sleep(1)
+
 preview_host = sandbox.get_host(3000)
 print(f"Preview URL: https://{preview_host}")
+
+print(f"Status before pause: {sandbox.get_info().state}")
+sandbox.pause()
+print(f"Status after pause: {sandbox.get_info().state}")
 ```
 </CodeGroup>
 
