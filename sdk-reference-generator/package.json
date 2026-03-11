@@ -15,7 +15,7 @@
     "fs-extra": "^11.2.0",
     "glob": "^11.0.0",
     "semver": "^7.6.3",
-    "simple-git": "^3.27.0",
+    "simple-git": "^3.32.3",
     "zod": "^3.24.1"
   },
   "devDependencies": {
