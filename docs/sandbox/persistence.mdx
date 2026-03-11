@@ -44,7 +44,7 @@ import { Sandbox } from '@e2b/code-interpreter'
 const sandbox = await Sandbox.create() // Starts in Running state
 
 // Pause the sandbox
-await sandbox.betaPause() // Running → Paused
+await sandbox.pause() // Running → Paused
 
 // Resume the sandbox
 await sandbox.connect() // Running/Paused → Running
@@ -59,7 +59,7 @@ from e2b_code_interpreter import Sandbox
 sandbox = Sandbox.create()  # Starts in Running state
 
 # Pause the sandbox
-sandbox.beta_pause()  # Running → Paused
+sandbox.pause()  # Running → Paused
 
 # Resume the sandbox
 sandbox.connect()  # Running/Paused → Running
@@ -81,7 +81,7 @@ console.log('Sandbox created', sbx.sandboxId)
 
 // Pause the sandbox
 // You can save the sandbox ID in your database to resume the sandbox later
-await sbx.betaPause()
+await sbx.pause()
 console.log('Sandbox paused', sbx.sandboxId)
 ```
 ```python Python highlight={8-9}
@@ -92,8 +92,8 @@ print('Sandbox created', sbx.sandbox_id)
 
 # Pause the sandbox
 # You can save the sandbox ID in your database to resume the sandbox later
-sbx.beta_pause()
-print('Sandbox paused', sbx.sandbox_id)
+sbx.pause()
+print('Sandbox paused', sbx.sandbox_id) 
 ```
 </CodeGroup>
 
@@ -111,7 +111,7 @@ console.log('Sandbox created', sbx.sandboxId)
 
 // Pause the sandbox
 // You can save the sandbox ID in your database to resume the sandbox later
-await sbx.betaPause()
+await sbx.pause()
 console.log('Sandbox paused', sbx.sandboxId)
 
 // Connect to the sandbox (it will automatically resume the sandbox, if paused)
@@ -126,7 +126,7 @@ print('Sandbox created', sbx.sandbox_id)
 
 # Pause the sandbox
 # You can save the sandbox ID in your database to resume the sandbox later
-sbx.beta_pause()
+sbx.pause()
 print('Sandbox paused', sbx.sandbox_id)
 
 # Connect to the sandbox (it will automatically resume the sandbox, if paused)
@@ -184,7 +184,7 @@ console.log('Sandbox created', sbx.sandboxId)
 
 // Pause the sandbox
 // You can save the sandbox ID in your database to resume the sandbox later
-await sbx.betaPause()
+await sbx.pause()
 
 // Remove the sandbox
 await sbx.kill()
@@ -198,7 +198,7 @@ from e2b_code_interpreter import Sandbox
 sbx = Sandbox.create()
 
 # Pause the sandbox
-sbx.beta_pause()
+sbx.pause()
 
 # Remove the sandbox
 sbx.kill()
@@ -227,32 +227,38 @@ sbx = Sandbox.connect(sandbox_id, timeout=60) # 60 seconds
 
 ### Auto-pause
 
-Sandboxes automatically pause when their timeout expires, preserving their full state instead of shutting down. You can resume at any time from exactly where you left off. The default timeout is 10 minutes — configure it with the `timeoutMs`/`timeout` parameter.
+Auto-pause is configured in the sandbox lifecycle on create. Set `onTimeout`/`on_timeout` to `pause`.
 
 <CodeGroup>
 ```js JavaScript & TypeScript
-import { Sandbox } from '@e2b/code-interpreter'
+import { Sandbox } from 'e2b'
 
-// Create sandbox with auto-pause enabled
-const sandbox = await Sandbox.betaCreate({
-    autoPause: true,
-    timeoutMs: 10 * 60 * 1000 // Optional: change the default timeout (10 minutes)
+const sandbox = await Sandbox.create({
+  timeoutMs: 10 * 60 * 1000, // Optional: change default timeout (10 minutes)
+  lifecycle: {
+    onTimeout: 'pause',
+    autoResume: false, // Optional (default is false)
+  },
 })
 ```
 ```python Python
-from e2b_code_interpreter import Sandbox
+from e2b import Sandbox
 
-# Create sandbox with auto-pause enabled
-sandbox = Sandbox.beta_create(
-    auto_pause=True,  # Auto-pause after the sandbox times out
-    timeout=10 * 60, # Optional: change the default timeout (10 minutes)
+sandbox = Sandbox.create(
+    timeout=10 * 60,  # Optional: change default timeout (10 minutes)
+    lifecycle={
+        "on_timeout": "pause", # Auto-pause after the sandbox times out
+        "auto_resume": False,  # Optional (default is False)
+    },
 )
 ```
 </CodeGroup>
 
-The auto-pause is persistent, meaning that if your sandbox resumes and it times out, it will be automatically paused again.
+Auto-pause is persistent, meaning if your sandbox resumes and later times out again, it will pause again.
 
-If you `.kill()` the sandbox, it will be permanently deleted and you won't be able to resume it.
+If you call `.kill()`, the sandbox is permanently deleted and cannot be resumed.
+
+For auto-resume behavior, see [AutoResume](/docs/sandbox/auto-resume).
 
 <CodeGroup>
 ```js JavaScript & TypeScript

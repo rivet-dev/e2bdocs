@@ -1,0 +1,222 @@
+---
+title: "AutoResume"
+sidebarTitle: AutoResume
+---
+
+<Note>
+`AutoResume` and `pause/resume` persistence are available as **Developer Preview**.
+
+Behavior and limits may change as we iterate. Review [Sandbox persistence limitations](/docs/sandbox/persistence#current-limitations-subject-to-change).
+</Note>
+
+Many workloads don't need a sandbox running all the time, but when they do need it, it should just work, whether it was paused or not.
+
+`AutoResume` handles this automatically: a paused sandbox wakes up when activity arrives, so your code does not have to check or manage sandbox state.
+Configure it through the `lifecycle` object when creating a sandbox.
+
+## Configure lifecycle on create
+
+<CodeGroup>
+```js JavaScript & TypeScript
+import { Sandbox } from 'e2b'
+
+const sandbox = await Sandbox.create({
+  timeoutMs: 10 * 60 * 1000,
+  lifecycle: {
+    onTimeout: 'pause',
+    autoResume: true, // resume when traffic arrives
+  },
+})
+```
+```python Python
+from e2b import Sandbox
+
+sandbox = Sandbox.create(
+    timeout=10 * 60,
+    lifecycle={
+        "on_timeout": "pause",
+        "auto_resume": True,  # resume when traffic arrives
+    },
+)
+```
+</CodeGroup>
+
+## Lifecycle options
+
+- `onTimeout` / `on_timeout`
+  - `kill` (default): sandbox is terminated when timeout is reached
+  - `pause`: sandbox is paused when timeout is reached
+- `autoResume` / `auto_resume`
+  - `false` (default): paused sandboxes do not auto-resume
+  - `true`: paused sandboxes auto-resume on activity
+  - `true` is valid only when `onTimeout`/`on_timeout` is `pause`
+
+## Behavior summary
+
+- Default behavior is equivalent to `onTimeout: "kill"` with `autoResume: false`.
+- `onTimeout: "pause"` with `autoResume: false` gives auto-pause without auto-resume.
+- `onTimeout: "pause"` with `autoResume: true` gives auto-pause with auto-resume.
+- [`Sandbox.connect()`](/docs/sandbox/connect) can still be used to resume a paused sandbox manually.
+
+If you use `autoResume: false`, resume explicitly with [`Sandbox.connect()`](/docs/sandbox/connect).
+
+## Use cases
+
+### Web and dev/preview servers
+
+Use `onTimeout: "pause"` + `autoResume: true` so inbound traffic can wake a paused sandbox automatically.
+This works for both:
+- Basic web/API servers
+- Dev or preview servers you open occasionally
+
+<CodeGroup>
+```js JavaScript & TypeScript
+import { Sandbox } from 'e2b'
+
+const sandbox = await Sandbox.create({
+  timeoutMs: 10 * 60 * 1000,
+  lifecycle: {
+    onTimeout: 'pause',
+    autoResume: true,
+  },
+})
+
+// Example: app source already exists in /home/user/app.
+// Replace this command with your API server, Next.js, Vite, etc.
+await sandbox.commands.run(
+  'cd /home/user/app && npm install && npm run dev -- --host 0.0.0.0 --port 3000',
+  { background: true }
+)
+
+const previewHost = sandbox.getHost(3000)
+console.log(`Preview URL: https://${previewHost}`)
+```
+```python Python
+from e2b import Sandbox
+
+sandbox = Sandbox.create(
+    timeout=10 * 60,
+    lifecycle={
+        "on_timeout": "pause",
+        "auto_resume": True,
+    },
+)
+
+# Example: app source already exists in /home/user/app.
+# Replace this command with your API server, Next.js, Vite, etc.
+sandbox.commands.run(
+    "cd /home/user/app && npm install && npm run dev -- --host 0.0.0.0 --port 3000",
+    background=True,
+)
+
+preview_host = sandbox.get_host(3000)
+print(f"Preview URL: https://{preview_host}")
+```
+</CodeGroup>
+
+### Agent/tool execution
+
+For queued tasks or tool calls, create once and keep using the same sandbox handle. If it is paused, it will auto-resume when you run the next command.
+
+<CodeGroup>
+```js JavaScript & TypeScript
+import { Sandbox } from 'e2b'
+
+// One-time setup
+const sandbox = await Sandbox.create({
+  timeoutMs: 5 * 60 * 1000,
+  lifecycle: {
+    onTimeout: 'pause',
+    autoResume: true,
+  },
+})
+
+// Later: called for each agent/tool task
+async function runToolTask(command) {
+  const result = await sandbox.commands.run(command)
+  return result.stdout
+}
+
+console.log(await runToolTask('python -c "print(2 + 2)"'))
+```
+```python Python
+from e2b import Sandbox
+
+# One-time setup
+sandbox = Sandbox.create(
+    timeout=5 * 60,
+    lifecycle={
+        "on_timeout": "pause",
+        "auto_resume": True,
+    },
+)
+
+# Later: called for each agent/tool task
+def run_tool_task(command: str) -> str:
+    result = sandbox.commands.run(command)
+    return result.stdout
+
+print(run_tool_task('python -c "print(2 + 2)"'))
+```
+</CodeGroup>
+
+### Per-user sandboxes
+
+For multi-tenant apps, keep a map of sandbox IDs by user. On each request, connect to the user's existing sandbox (which auto-resumes if paused) or create a new one.
+
+<CodeGroup>
+```js JavaScript & TypeScript
+import { Sandbox } from 'e2b'
+
+const userSandboxes = new Map() // userId → Sandbox
+
+async function getSandbox(userId) {
+  let sandbox = userSandboxes.get(userId)
+
+  if (!sandbox) {
+    sandbox = await Sandbox.create({
+      timeoutMs: 5 * 60 * 1000,
+      lifecycle: {
+        onTimeout: 'pause',
+        autoResume: true,
+      },
+    })
+    userSandboxes.set(userId, sandbox)
+  }
+
+  return sandbox
+}
+
+// On each user request (auto-resumes if paused)
+const sandbox = await getSandbox('user-123')
+const result = await sandbox.commands.run('echo "Hello from your sandbox"')
+console.log(result.stdout)
+```
+```python Python
+from e2b import Sandbox
+
+user_sandboxes: dict[str, Sandbox] = {}  # user_id → Sandbox
+
+def get_sandbox(user_id: str) -> Sandbox:
+    if user_id not in user_sandboxes:
+        user_sandboxes[user_id] = Sandbox.create(
+            timeout=5 * 60,
+            lifecycle={
+                "on_timeout": "pause",
+                "auto_resume": True,
+            },
+        )
+
+    return user_sandboxes[user_id]
+
+# On each user request (auto-resumes if paused)
+sandbox = get_sandbox("user-123")
+result = sandbox.commands.run('echo "Hello from your sandbox"')
+print(result.stdout)
+```
+</CodeGroup>
+
+## Cleanup
+Auto-resume is persistent, meaning if your sandbox resumes and later times out again, it will pause again.
+
+If you call `.kill()`, the sandbox is permanently deleted and cannot be resumed.

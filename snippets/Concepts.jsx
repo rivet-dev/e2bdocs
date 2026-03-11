@@ -11,7 +11,7 @@ export const Concepts = () => {
       href: "/docs/sandbox/persistence",
       title: "Sandbox persistence",
       description:
-        "Learn how to achieve data persistence by pausing and resuming sandboxes.",
+        "Developer Preview: Pause and resume sandboxes to preserve state.",
       icon: "rotate-reverse",
     },
     // {
