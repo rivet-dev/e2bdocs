@@ -394,9 +394,11 @@ This sandbox is created with a 10-minute timeout and auto-pause enabled. After 1
 ```typescript JavaScript & TypeScript
 import { Sandbox } from 'e2b'
 
-const sandbox = await Sandbox.betaCreate('openclaw', {
+const sandbox = await Sandbox.create('openclaw', {
   envs: { ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY },
-  autoPause: true,
+  lifecycle: {
+    onTimeout: 'pause',
+  },
   timeoutMs: 10 * 60 * 1000,
 })
 

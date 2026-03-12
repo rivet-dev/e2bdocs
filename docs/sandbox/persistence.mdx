@@ -260,25 +260,6 @@ If you call `.kill()`, the sandbox is permanently deleted and cannot be resumed.
 
 For auto-resume behavior, see [AutoResume](/docs/sandbox/auto-resume).
 
-<CodeGroup>
-```js JavaScript & TypeScript
-import { Sandbox } from '@e2b/code-interpreter'
-
-// Create sandbox with auto-pause enabled
-const sandbox = await Sandbox.betaCreate({
-    autoPause: true  // Auto-pause after the sandbox times out
-})
-```
-```python Python
-from e2b_code_interpreter import Sandbox
-
-# Create sandbox with auto-pause enabled
-sandbox = Sandbox.beta_create(
-    auto_pause=True  # Auto-pause after the sandbox times out
-)
-```
-</CodeGroup>
-
 ## Network
 If you have a service (for example a server) running inside your sandbox and you pause the sandbox, the service won't be accessible from the outside and all the clients will be disconnected.
 If you resume the sandbox, the service will be accessible again but you need to connect clients again.

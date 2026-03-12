@@ -120,9 +120,11 @@ OpenCode includes a [headless HTTP server](https://opencode.ai/docs/server/) tha
 import { Sandbox } from 'e2b'
 import { createOpencodeClient } from '@opencode-ai/sdk'
 
-const sandbox = await Sandbox.betaCreate('opencode', {
+const sandbox = await Sandbox.create('opencode', {
   envs: { ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY },
-  autoPause: true,
+  lifecycle: {
+    onTimeout: 'pause', // "pause" | "kill"
+  },
   timeoutMs: 10 * 60 * 1000,
 })
 
