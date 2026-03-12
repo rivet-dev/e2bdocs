@@ -11,7 +11,7 @@ export const Concepts = () => {
       href: "/docs/sandbox/persistence",
       title: "Sandbox persistence",
       description:
-        "Developer Preview: Pause and resume sandboxes to preserve state.",
+        "Pause and resume sandboxes to preserve state.",
       icon: "rotate-reverse",
     },
     // {
