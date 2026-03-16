@@ -8,6 +8,12 @@ You can then use a snapshot to spawn new sandboxes that start from the exact sam
 
 The original sandbox continues running after the snapshot is created, and a single snapshot can be used to create many new sandboxes.
 
+## Prerequisites
+
+Snapshots require templates with envd version `v0.5.0` or above. If you are using a custom template created before envd `v0.5.0`, you need to rebuild it.
+
+You can check the template envd version using the `e2b template list` command or by viewing the templates list on the dashboard.
+
 ## Snapshots vs. Pause/Resume
 
 | | Pause/Resume | Snapshots |
