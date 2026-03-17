@@ -152,8 +152,8 @@ jobs:
             docs.json
           author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
           committer: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
-          commit-message: docs: sync SDK reference for ${{ steps.params.outputs.sdk }} ${{ steps.params.outputs.version }}
-          title: docs: sync SDK reference for ${{ steps.params.outputs.sdk }} ${{ steps.params.outputs.version }}
+          commit-message: "docs: sync SDK reference for ${{ steps.params.outputs.sdk }} ${{ steps.params.outputs.version }}"
+          title: "docs: sync SDK reference for ${{ steps.params.outputs.sdk }} ${{ steps.params.outputs.version }}"
           body: |
             ## Summary
             This automated PR syncs generated SDK reference documentation.
