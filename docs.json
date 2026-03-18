@@ -3620,6 +3620,14 @@
             ]
           }
         ]
+      },
+      {
+        "anchor": "API reference",
+        "icon": "code",
+        "openapi": {
+          "source": "openapi-public.yml",
+          "directory": "docs/api-reference"
+        }
       }
     ],
     "global": {}
