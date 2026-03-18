@@ -1156,7 +1156,7 @@ def filter_paths(spec: dict[str, Any]) -> None:
     """
     # Remove excluded paths
     excluded_prefixes = ("/access-tokens", "/api-keys", "/volumes")
-    excluded_exact = {"/v2/sandboxes/{sandboxID}/logs", "/init"}
+    excluded_exact = {"/init"}
     to_remove = [
         p for p in spec["paths"]
         if p.startswith(excluded_prefixes) or p in excluded_exact
