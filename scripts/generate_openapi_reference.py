@@ -842,12 +842,6 @@ def fix_spec_issues(spec: dict[str, Any]) -> None:
     if op_id_count:
         fixes.append(f"Generated operationId for {op_id_count} platform endpoints")
 
-    # 11. Phantom deprecation reference: /v2/sandboxes/{sandboxID}/logs doesn't exist
-    logs_path = paths.get("/sandboxes/{sandboxID}/logs", {})
-    logs_get = logs_path.get("get")
-    if logs_get and "/v2/" in logs_get.get("description", ""):
-        logs_get["description"] = "Get sandbox logs."
-        fixes.append("/sandboxes/{sandboxID}/logs: removed phantom /v2 deprecation reference")
 
     # 12. Truncated parameter descriptions on metrics endpoints
     metrics_desc_suffix = " are returned."
@@ -1037,6 +1031,7 @@ def fix_spec_issues(spec: dict[str, Any]) -> None:
         ("/v2/sandboxes", "get"): "List sandboxes (v2)",
         ("/sandboxes/metrics", "get"): "List sandbox metrics",
         ("/sandboxes/{sandboxID}/logs", "get"): "Get sandbox logs",
+        ("/v2/sandboxes/{sandboxID}/logs", "get"): "Get sandbox logs (v2)",
         ("/sandboxes/{sandboxID}", "get"): "Get sandbox",
         ("/sandboxes/{sandboxID}", "delete"): "Delete sandbox",
         ("/sandboxes/{sandboxID}/metrics", "get"): "Get sandbox metrics",
