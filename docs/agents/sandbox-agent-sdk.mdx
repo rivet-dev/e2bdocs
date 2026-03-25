@@ -1,0 +1,90 @@
+---
+title: "Sandbox Agent SDK"
+description: "Run Sandbox Agent inside an E2B sandbox and control it from a local Node.js script."
+---
+
+This guide shows how to run [Sandbox Agent](https://github.com/rivet-dev/sandbox-agent) inside an E2B sandbox and control it with the [Sandbox Agent SDK](https://sandboxagent.dev/docs/sdk-overview).
+
+## Workflow overview
+
+- A local Node.js script starts an E2B sandbox and boots the Sandbox Agent server inside it.
+- The script opens a session, sends a prompt to an agent (Claude in this example), and prints the response.
+- When the script exits, the sandbox is destroyed.
+
+## Prerequisites
+
+- `E2B_API_KEY`
+- At least one provider key: `OPENAI_API_KEY`, `CODEX_API_KEY`, or `ANTHROPIC_API_KEY`
+
+## Setup
+
+Install dependencies:
+
+```bash
+npm install sandbox-agent dotenv tsx
+```
+
+Create a `.env` file:
+
+```bash
+E2B_API_KEY=your_e2b_api_key
+OPENAI_API_KEY=your_openai_api_key
+# CODEX_API_KEY=your_codex_api_key
+# ANTHROPIC_API_KEY=your_anthropic_api_key
+```
+
+Create `index.ts` with the snippets below, then run:
+
+```bash
+node --import tsx index.ts
+```
+
+## Code snippets
+
+Forward your provider credentials into the sandbox:
+
+```ts
+const envs: Record<string, string> = {};
+if (process.env.ANTHROPIC_API_KEY) envs.ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
+if (process.env.OPENAI_API_KEY) envs.OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+if (process.env.CODEX_API_KEY) envs.CODEX_API_KEY = process.env.CODEX_API_KEY;
+if (!envs.CODEX_API_KEY && envs.OPENAI_API_KEY) envs.CODEX_API_KEY = envs.OPENAI_API_KEY;
+if (!envs.OPENAI_API_KEY && !envs.CODEX_API_KEY && !envs.ANTHROPIC_API_KEY) {
+  throw new Error('Set OPENAI_API_KEY/CODEX_API_KEY or ANTHROPIC_API_KEY');
+}
+```
+
+Start Sandbox Agent with the E2B provider and open a session:
+
+```ts
+import { SandboxAgent } from 'sandbox-agent';
+import { e2b } from 'sandbox-agent/e2b';
+
+const sdk = await SandboxAgent.start({
+  sandbox: e2b({
+    create: { envs },
+  })
+});
+
+const session = await sdk.createSession({ agent: 'claude' });
+console.log(`Inspector URL: ${sdk.inspectorUrl}`);
+```
+
+Send a prompt, then clean up the sandbox:
+
+```ts
+const response = await session.prompt([
+  { type: 'text', text: 'Summarize this repository' },
+]);
+console.log(response.stopReason);
+
+await sdk.destroySandbox();
+```
+
+## Customize the agent
+
+To use a different agent, update the `agent` value in `createSession` (for example, `codex`) and ensure the corresponding provider credentials are available in the environment.
+
+## Full example
+
+See the complete project here in the [e2b-cookbook repo](https://github.com/rivet-dev/e2b-cookbook/tree/main/examples/sandbox-agent-sdk).
