@@ -5,6 +5,12 @@ description: "Run Sandbox Agent inside an E2B sandbox and control it from a loca
 
 This guide shows how to run [Sandbox Agent](https://github.com/rivet-dev/sandbox-agent) inside an E2B sandbox and control it with the [Sandbox Agent SDK](https://sandboxagent.dev/docs/sdk-overview).
 
+Sandbox Agent lets you run coding agents in sandboxes and control them from your own backend over HTTP.
+
+- **Universal Agent API** - A single interface to manage Claude Code, Codex, OpenCode, Cursor, Amp, and Pi with full feature coverage across every supported agent.
+- **Universal Session Schema** - A standardized schema that normalizes all agent event formats into a consistent structure for storage and replay.
+- **Server or SDK Mode** - Run as a standalone HTTP server or integrate natively using the TypeScript SDK.
+
 ## Workflow overview
 
 - A local Node.js script starts an E2B sandbox and boots the Sandbox Agent server inside it.
@@ -21,15 +27,15 @@ This guide shows how to run [Sandbox Agent](https://github.com/rivet-dev/sandbox
 Install dependencies:
 
 ```bash
-npm install sandbox-agent dotenv tsx
+npm install sandbox-agent dotenv tsx @e2b/code-interpreter
 ```
 
 Create a `.env` file:
 
 ```bash
 E2B_API_KEY=your_e2b_api_key
-OPENAI_API_KEY=your_openai_api_key
-# ANTHROPIC_API_KEY=your_anthropic_api_key
+ANTHROPIC_API_KEY=your_anthropic_api_key
+# OPENAI_API_KEY=your_openai_api_key
 ```
 
 Create `index.ts` with the snippets below, then run:
@@ -43,14 +49,10 @@ node --import tsx index.ts
 Forward your provider credentials into the sandbox:
 
 ```ts
+import "dotenv/config";
 const envs: Record<string, string> = {};
 if (process.env.ANTHROPIC_API_KEY) envs.ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 if (process.env.OPENAI_API_KEY) envs.OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-if (process.env.CODEX_API_KEY) envs.CODEX_API_KEY = process.env.CODEX_API_KEY;
-if (!envs.CODEX_API_KEY && envs.OPENAI_API_KEY) envs.CODEX_API_KEY = envs.OPENAI_API_KEY;
-if (!envs.OPENAI_API_KEY && !envs.CODEX_API_KEY && !envs.ANTHROPIC_API_KEY) {
-  throw new Error('Set OPENAI_API_KEY/CODEX_API_KEY or ANTHROPIC_API_KEY');
-}
 ```
 
 Start Sandbox Agent with the E2B provider:
@@ -73,7 +75,7 @@ console.log(`Inspector URL: ${sdk.inspectorUrl}`);
 Send a prompt, and stream events:
 
 ```ts
-const session = await sdk.createSession({ agent: "claude" });
+const session = await sdk.createSession({ agent: 'claude' });
 const off = session.onEvent((event) => {
     console.log(`[event] from ${event.sender}`, event.payload);
 });
@@ -83,7 +85,10 @@ await session.prompt([
 off();
 ```
 
+Read more about [Sessions and Events](https://sandboxagent.dev/docs/agent-sessions).
+
 Finally, once done, destroy the sandbox:
+
 ```ts
 await sdk.destroySandbox();
 ```
