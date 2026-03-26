@@ -53,7 +53,7 @@ if (!envs.OPENAI_API_KEY && !envs.CODEX_API_KEY && !envs.ANTHROPIC_API_KEY) {
 }
 ```
 
-Start Sandbox Agent with the E2B provider and open a session:
+Start Sandbox Agent with the E2B provider:
 
 ```ts
 import { SandboxAgent } from 'sandbox-agent';
@@ -65,6 +65,8 @@ const sdk = await SandboxAgent.start({
   })
 });
 
+// The printed inspector URL is where you can open
+// the Sandbox Agent inspector UI.
 console.log(`Inspector URL: ${sdk.inspectorUrl}`);
 ```
 
@@ -75,7 +77,9 @@ const session = await sdk.createSession({ agent: "claude" });
 const off = session.onEvent((event) => {
     console.log(`[event] from ${event.sender}`, event.payload);
 });
-await session.prompt([{ type: 'text', text: 'Explain this repository' }])
+await session.prompt([
+  { type: 'text', text: 'Summarize this repository' }
+]);
 off();
 ```
 
