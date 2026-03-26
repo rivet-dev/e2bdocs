@@ -29,7 +29,6 @@ Create a `.env` file:
 ```bash
 E2B_API_KEY=your_e2b_api_key
 OPENAI_API_KEY=your_openai_api_key
-# CODEX_API_KEY=your_codex_api_key
 # ANTHROPIC_API_KEY=your_anthropic_api_key
 ```
 
@@ -66,18 +65,22 @@ const sdk = await SandboxAgent.start({
   })
 });
 
-const session = await sdk.createSession({ agent: 'claude' });
 console.log(`Inspector URL: ${sdk.inspectorUrl}`);
 ```
 
-Send a prompt, then clean up the sandbox:
+Send a prompt, and stream events:
 
 ```ts
-const response = await session.prompt([
-  { type: 'text', text: 'Summarize this repository' },
-]);
-console.log(response.stopReason);
+const session = await sdk.createSession({ agent: "claude" });
+const off = session.onEvent((event) => {
+    console.log(`[event] from ${event.sender}`, event.payload);
+});
+await session.prompt([{ type: 'text', text: 'Explain this repository' }])
+off();
+```
 
+Finally, once done, destroy the sandbox:
+```ts
 await sdk.destroySandbox();
 ```
 
